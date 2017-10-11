@@ -1,0 +1,3 @@
+[submodule "ToDoCore/unit_test/googletest"]
+	path = ToDoCore/unit_test/googletest
+	url = https://github.com/google/googletest.git
