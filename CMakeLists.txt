@@ -3,7 +3,10 @@ set(CMAKE_LEGACY_CYGWIN_WIN32 0)
 
 project("To Do List")
 
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+
 enable_testing()
+include(gmock)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
     "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
