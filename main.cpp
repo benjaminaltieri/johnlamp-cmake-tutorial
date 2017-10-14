@@ -1,24 +1,47 @@
 #include <iostream>
+#include <string>
+
+#include <boost/program_options.hpp>
 
 #include "ToDoCore/ToDo.h"
 
-#define EXPECT_EQUAL(test, expect) equalityTest( test, expect, \
-                                                 #test, #expect, \
-                                                 __FILE__, __LINE__)
-template <typename T1, typename T2>
-int equalityTest(const T1 testValue,
-                 const T2 expectedValue,
-                 const char* testName,
-                 const char* expectedName,
-                 const char* fileName,
-                 const int lineNumber
-                );
-
 using namespace std;
+using namespace boost::program_options;
 
-int main(int, char**)
+int main(int argc, char** argv)
 {
-    int result = 0;
+    options_description desc("Options");
+    desc.add_options()
+        ("help,h", "displat this help")
+        ("add,a", value<string>(), "add a new entry to the To Do list")
+        ;
+
+    bool parseError = false;
+    variables_map vm;
+    try
+    {
+        store(parse_command_line(argc, argv, desc), vm);
+        notify(vm);
+    }
+    catch (error& error)
+    {
+        cerr << "Error: " << error.what() << endl;
+    }
+
+    if (parseError || vm.count("help")) {
+        cout << "todo: A simple To Do List program" << endl;
+        cout << endl;
+        cout << "Usage:" << endl;
+        cout << "  " << argv[0] << " [options]" << endl;
+        cout << endl;
+        cout << desc << endl;
+
+        if (parseError) {
+            return 64;
+        } else {
+            return 0;
+        }
+    }
 
     ToDo list;
 
@@ -26,13 +49,13 @@ int main(int, char**)
     list.addTask("compile");
     list.addTask("test");
 
-    result |= EXPECT_EQUAL(list.size(), (size_t)3);
-    result |= EXPECT_EQUAL(list.getTask(0), "write code");
-    result |= EXPECT_EQUAL(list.getTask(1), "compile");
-    result |= EXPECT_EQUAL(list.getTask(2), "test");
+    if (vm.count("add")) {
+        list.addTask(vm["add"].as<string>());
+    }
 
-    if (result == 0) {
-        cout << "Test passed" << endl;
+    for (size_t i = 0; i < list.size(); i++)
+    {
+        cout << list.getTask(i) << endl;
     }
 
     return 0;
