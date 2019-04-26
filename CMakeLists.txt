@@ -2,11 +2,28 @@ cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 set(CMAKE_LEGACY_CYGWIN_WIN32 0)
 
 project("To Do List")
+set(CMAKE_BUILD_TYPE Coverage)  # required: Coverage or Debug
+set(PROJECT_TEST_NAME ToDoTest)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 enable_testing()
 include(gmock)
+include(CodeCoverage)  # include the cmake code coverage module
+append_coverage_compiler_flags()
+set(COVERAGE_LCOV_EXCLUDES
+    '${CMAKE_SOURCE_DIR}/googletest/*'
+    '${CMAKE_SOURCE_DIR}/main.cpp'
+    '/usr/*'
+    '/Library/*'
+)
+# cmake code coverage module target
+setup_target_for_coverage_lcov(
+    NAME ${PROJECT_TEST_NAME}_coverage
+    EXECUTABLE ${PROJECT_TEST_NAME}
+    DEPENDENCIES ${PROJECT_TEST_NAME}
+)
+
 
 if (NOT DEFINED     BOOST_ROOT        AND
     NOT DEFINED ENV{BOOST_ROOT}       AND
