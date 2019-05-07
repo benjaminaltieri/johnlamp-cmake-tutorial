@@ -66,7 +66,7 @@ if(ENABLE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
   else()
     target_link_libraries(coverage_config INTERFACE --coverage)
   endif()
-endif(ENABLE_COVERAGE)
+endif()
 
 set(CONFIGURED_ONCE TRUE CACHE INTERNAL
     "A flag showing that CMake has configured at least once.")
