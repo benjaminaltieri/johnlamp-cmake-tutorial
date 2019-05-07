@@ -416,9 +416,10 @@ function(add_code_coverage_all_targets)
       add_custom_target(
         ccov-all-export
         COMMAND
-          llvm-cov export `cat ${CMAKE_COVERAGE_OUTPUT_DIRECTORY}/binaries.list`
+          llvm-cov show `cat ${CMAKE_COVERAGE_OUTPUT_DIRECTORY}/binaries.list`
           -instr-profile=${CMAKE_COVERAGE_OUTPUT_DIRECTORY}/all-merged.profdata
-          -format=text ${EXCLUDE_REGEX} > ${CMAKE_COVERAGE_OUTPUT_DIRECTORY}/coverage.txt
+          -show-line-counts-or-regions
+          -format="text" ${EXCLUDE_REGEX} > ${CMAKE_COVERAGE_OUTPUT_DIRECTORY}/coverage.txt
         DEPENDS ccov-all-processing)
 
     elseif(CMAKE_COMPILER_IS_GNUCXX)
