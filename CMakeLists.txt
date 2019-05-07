@@ -8,6 +8,25 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 enable_testing()
 include(gmock)
 
+option(ENABLE_COVERAGE "Enable coverage reporting" OFF)
+if(ENABLE_COVERAGE)
+    set(PROJECT_TEST_NAME ToDoTest)
+    include(CodeCoverage)
+    append_coverage_compiler_flags()
+    set(COVERAGE_LCOV_EXCLUDES
+        '${CMAKE_SOURCE_DIR}/googletest/*'
+        '${CMAKE_SOURCE_DIR}/main.cpp'
+        '/usr/*'
+        '/Library/*'
+    )
+    # cmake code coverage module target
+    setup_target_for_coverage_lcov(
+        NAME ${PROJECT_TEST_NAME}_coverage
+        EXECUTABLE ${PROJECT_TEST_NAME}
+        DEPENDENCIES ${PROJECT_TEST_NAME}
+    )
+endif()
+
 
 if (NOT DEFINED     BOOST_ROOT        AND
     NOT DEFINED ENV{BOOST_ROOT}       AND
@@ -54,25 +73,6 @@ add_executable(ToDo main.cpp)
 target_link_libraries(ToDo ToDoCore ${Boost_LIBRARIES})
 
 add_test(ToDo ToDo)
-
-option(ENABLE_COVERAGE "Enable coverage reporting" OFF)
-if(ENABLE_COVERAGE)
-    set(PROJECT_TEST_NAME ToDoTest)
-    include(CodeCoverage)
-    append_coverage_compiler_flags()
-    set(COVERAGE_LCOV_EXCLUDES
-        '${CMAKE_SOURCE_DIR}/googletest/*'
-        '${CMAKE_SOURCE_DIR}/main.cpp'
-        '/usr/*'
-        '/Library/*'
-    )
-    # cmake code coverage module target
-    setup_target_for_coverage_lcov(
-        NAME ${PROJECT_TEST_NAME}_coverage
-        EXECUTABLE ${PROJECT_TEST_NAME}
-        DEPENDENCIES ${PROJECT_TEST_NAME}
-    )
-endif()
 
 set(CONFIGURED_ONCE TRUE CACHE INTERNAL
     "A flag showing that CMake has configured at least once.")
