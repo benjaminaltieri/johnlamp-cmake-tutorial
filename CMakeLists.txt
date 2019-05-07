@@ -8,6 +8,8 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 enable_testing()
 include(gmock)
+# enable code coverage
+find_package(codecov)
 
 if (NOT DEFINED     BOOST_ROOT        AND
     NOT DEFINED ENV{BOOST_ROOT}       AND
@@ -51,9 +53,16 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(ToDoCore)
 
 add_executable(ToDo main.cpp)
+add_coverage(ToDo)
 target_link_libraries(ToDo ToDoCore ${Boost_LIBRARIES})
 
 add_test(ToDo ToDo)
+list(APPEND LCOV_REMOVE_PATTERNS "'${PROJECT_SOURCE_DIR}/main.cpp'")
+
+# filter out googletest
+list(APPEND LCOV_REMOVE_PATTERNS "'${PROJECT_SOURCE_DIR}/googletest/*'")
+# required at end of configure for codecov module
+coverage_evaluate()
 
 set(CONFIRGURED_ONCE TRUE CACHE INTERNAL
     "A flag showing that CMake has configured at least once.")

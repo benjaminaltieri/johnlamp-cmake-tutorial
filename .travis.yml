@@ -19,9 +19,10 @@ addons:
 
 script:
   - mkdir -p build && cd build
-  - cmake ..
+  - cmake .. -DENABLE_COVERAGE=ON
   - make
   - make test
+  - make gcov
 
 # Hook code coverage report with codecov.io
 after_success:
