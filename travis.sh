@@ -24,7 +24,8 @@ do_coverage_report() {
     lcov --list coverage.info
     # Uploading to CodeCov
     # '-f' specifies file(s) to use and disables manual coverage gathering and file search which has already been done above
-    bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"
+    # ignore for know
+    #bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"
 }
 
 run() {
