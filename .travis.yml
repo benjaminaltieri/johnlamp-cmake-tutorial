@@ -23,10 +23,11 @@ script:
   - make
   - make test
   - make gcov
+  - make lcov
 
 # Hook code coverage report with codecov.io
 after_success:
-  - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
+  - bash <(curl -s https://codecov.io/bash) -X gcov || echo "Codecov did not collect coverage reports" && exit 1
 
 # Disable notifications
 notifications:
