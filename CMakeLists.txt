@@ -50,22 +50,28 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 add_subdirectory(ToDoCore)
 
-# Code Coverage Configuration
-add_library(coverage_config INTERFACE)
+add_executable(ToDo main.cpp)
+target_link_libraries(ToDo ToDoCore ${Boost_LIBRARIES})
+
+add_test(ToDo ToDo)
 
 option(ENABLE_COVERAGE "Enable coverage reporting" OFF)
-if(ENABLE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-  # Add required flags (GCC & LLVM/Clang)
-  target_compile_options(coverage_config INTERFACE
-    -O0        # no optimization
-    -g         # generate debug info
-    --coverage # sets all required flags
-  )
-  if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.13)
-    target_link_options(coverage_config INTERFACE --coverage)
-  else()
-    target_link_libraries(coverage_config INTERFACE --coverage)
-  endif()
+if(ENABLE_COVERAGE)
+    set(PROJECT_TEST_NAME ToDoTest)
+    include(CodeCoverage)
+    append_coverage_compiler_flags()
+    set(COVERAGE_LCOV_EXCLUDES
+        '${CMAKE_SOURCE_DIR}/googletest/*'
+        '${CMAKE_SOURCE_DIR}/main.cpp'
+        '/usr/*'
+        '/Library/*'
+    )
+    # cmake code coverage module target
+    setup_target_for_coverage_lcov(
+        NAME ${PROJECT_TEST_NAME}_coverage
+        EXECUTABLE ${PROJECT_TEST_NAME}
+        DEPENDENCIES ${PROJECT_TEST_NAME}
+    )
 endif()
 
 set(CONFIGURED_ONCE TRUE CACHE INTERNAL

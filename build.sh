@@ -10,4 +10,6 @@ cmake -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug ..
 cmake --build . --config Debug -- -j $(nproc)
 # Test
 ctest -j $(nproc) --output-on-failure
+# Do the lcov generation
+cmake --build . --config Debug -- -j $(nproc) ToDoTest_coverage
 
