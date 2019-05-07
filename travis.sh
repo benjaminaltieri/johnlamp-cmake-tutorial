@@ -14,7 +14,7 @@ build() {
 }
 
 do_coverage_report() {
-    cmake --build . --config Debug -- ccov-all -j $(nproc)
+    cmake --build . --config Debug -- ccov-all-export -j $(nproc)
 }
 
 run() {

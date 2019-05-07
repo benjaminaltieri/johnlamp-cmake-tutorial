@@ -413,6 +413,14 @@ function(add_code_coverage_all_targets)
           -format="html" ${EXCLUDE_REGEX}
         DEPENDS ccov-all-processing)
 
+      add_custom_target(
+        ccov-all-export
+        COMMAND
+          llvm-cov export `cat ${CMAKE_COVERAGE_OUTPUT_DIRECTORY}/binaries.list`
+          -instr-profile=${CMAKE_COVERAGE_OUTPUT_DIRECTORY}/all-merged.profdata
+          -format=text ${EXCLUDE_REGEX} > ${CMAKE_COVERAGE_OUTPUT_DIRECTORY}/coverage.txt
+        DEPENDS ccov-all-processing)
+
     elseif(CMAKE_COMPILER_IS_GNUCXX)
       # Targets
       set(COVERAGE_INFO "${CMAKE_COVERAGE_OUTPUT_DIRECTORY}/all-merged.info")
