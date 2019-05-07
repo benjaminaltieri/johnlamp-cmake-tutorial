@@ -2,27 +2,11 @@ cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 set(CMAKE_LEGACY_CYGWIN_WIN32 0)
 
 project("To Do List")
-set(CMAKE_BUILD_TYPE Coverage)  # required: Coverage or Debug
-set(PROJECT_TEST_NAME ToDoTest)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 enable_testing()
 include(gmock)
-include(CodeCoverage)  # include the cmake code coverage module
-append_coverage_compiler_flags()
-set(COVERAGE_LCOV_EXCLUDES
-    '${CMAKE_SOURCE_DIR}/googletest/*'
-    '${CMAKE_SOURCE_DIR}/main.cpp'
-    '/usr/*'
-    '/Library/*'
-)
-# cmake code coverage module target
-setup_target_for_coverage_lcov(
-    NAME ${PROJECT_TEST_NAME}_coverage
-    EXECUTABLE ${PROJECT_TEST_NAME}
-    DEPENDENCIES ${PROJECT_TEST_NAME}
-)
 
 
 if (NOT DEFINED     BOOST_ROOT        AND
@@ -66,10 +50,23 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 add_subdirectory(ToDoCore)
 
-add_executable(ToDo main.cpp)
-target_link_libraries(ToDo ToDoCore ${Boost_LIBRARIES})
+# Code Coverage Configuration
+add_library(coverage_config INTERFACE)
 
-add_test(ToDo ToDo)
+option(ENABLE_COVERAGE "Enable coverage reporting" OFF)
+if(ENABLE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+  # Add required flags (GCC & LLVM/Clang)
+  target_compile_options(coverage_config INTERFACE
+    -O0        # no optimization
+    -g         # generate debug info
+    --coverage # sets all required flags
+  )
+  if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.13)
+    target_link_options(coverage_config INTERFACE --coverage)
+  else()
+    target_link_libraries(coverage_config INTERFACE --coverage)
+  endif()
+endif(ENABLE_COVERAGE)
 
-set(CONFIRGURED_ONCE TRUE CACHE INTERNAL
+set(CONFIGURED_ONCE TRUE CACHE INTERNAL
     "A flag showing that CMake has configured at least once.")
