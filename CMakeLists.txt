@@ -46,10 +46,6 @@ if (NOT CONFIGURED_ONCE)
         CACHE STRING "FLags used by the compiler during all build types." FORCE)
 endif()
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-
-add_subdirectory(ToDoCore)
-
 # Code Coverage Configuration
 add_library(coverage_config INTERFACE)
 
@@ -67,6 +63,10 @@ if(ENABLE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_link_libraries(coverage_config INTERFACE --coverage)
   endif()
 endif()
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
+add_subdirectory(ToDoCore)
 
 set(CONFIGURED_ONCE TRUE CACHE INTERNAL
     "A flag showing that CMake has configured at least once.")
