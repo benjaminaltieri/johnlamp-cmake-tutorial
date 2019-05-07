@@ -190,7 +190,9 @@ function (lcov_capture_initial_tgt TNAME)
 	set(GCOV_ENV "${GCOV_${TCOMPILER}_ENV}")
 
 
-	set(TDIR ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${TNAME}.dir)
+	get_target_property(TBIN_DIR ${TNAME} BINARY_DIR)
+	set(TDIR ${TBIN_DIR}/CMakeFiles/${TNAME}.dir)
+
 	set(GENINFO_FILES "")
 	foreach(FILE ${SOURCES})
 		# generate empty coverage files
@@ -280,8 +282,9 @@ function (lcov_capture_tgt TNAME)
 	set(GCOV_BIN "${GCOV_${TCOMPILER}_BIN}")
 	set(GCOV_ENV "${GCOV_${TCOMPILER}_ENV}")
 
+	get_target_property(TBIN_DIR ${TNAME} BINARY_DIR)
+	set(TDIR ${TBIN_DIR}/CMakeFiles/${TNAME}.dir)
 
-	set(TDIR ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${TNAME}.dir)
 	set(GENINFO_FILES "")
 	foreach(FILE ${SOURCES})
 		# Generate coverage files. If no .gcda file was generated during
