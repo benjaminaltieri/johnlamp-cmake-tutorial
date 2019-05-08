@@ -1,5 +1,4 @@
 add_library(ToDoCore ToDo.cpp)
-# Include code-coverage settings:
-target_link_libraries(ToDoCore PUBLIC coverage_config)
+target_code_coverage(ToDoCore AUTO ALL)
 
 add_subdirectory(unit_test)
