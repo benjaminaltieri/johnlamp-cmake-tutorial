@@ -7,5 +7,3 @@ Project based on John Lamp's awesome cmake tutorial available here: https://www.
 ## Supported Features
  * Travis Integration - Simple Travis [YAML file](https://github.com/benjaminaltieri/johnlamp-cmake-tutorial/blob/master/.travis.yml) included to show CI integration (plus badge! ^^^^^)
  * Basic codecov.io support via lcov
-
-
